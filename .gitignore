@@ -1,0 +1,101 @@
+# Dossiers et fichiers générés par Python
+__pycache__/
+*.pyc
+
+# Dossier virtuel Python (venv)
+venv/
+
+# Dossiers générés par Django
+db.sqlite3
+__pycache__
+*.pyc
+*.pyo
+
+# Fichiers spécifiques à VS Code
+.vscode/
+
+# Fichier .env (contient des informations sensibles, ne doit pas être versionné)
+.env
+
+# Fichiers temporaires générés par l'éditeur
+*~
+
+# Dossiers et fichiers de sauvegarde
+backup*/
+.svn/
+.svnignore
+.idea/
+*.bak
+
+# Dossiers et fichiers de logs
+logs/
+*.log
+
+# Fichiers de configuration spécifiques à l'IDE
+.idea/
+
+# Dossiers de fichiers générés par les tests
+htmlcov/
+.coverage
+.tox/
+.coverage.*
+
+# Dossier de fichiers statiques collectés (généré par Django collectstatic)
+staticfiles/
+
+# Fichiers de sauvegarde de bases de données SQLite
+*.sqlite3-journal
+
+# Fichiers de logs
+*.log
+
+# Cache de pycache
+__pycache__
+
+# Fichiers de sauvegarde de pycache
+*.pyc
+
+# Cache de l'éditeur
+.vscode-server/
+
+# Fichiers temporaires de l'éditeur
+.vscode-test/
+
+# Dossiers et fichiers générés par des outils spécifiques à Python
+pyenv/
+pip-selfcheck.json
+
+# Dossiers générés par la gestion des migrations de Django
+__pycache__/
+*.pyc
+*.pyo
+
+# Cache de l'éditeur Visual Studio
+.vscode/
+
+# Cache de l'éditeur Jupyter Notebook
+.ipynb_checkpoints/
+
+# Dossiers et fichiers de sortie de tests
+__pycache__/
+*.pyc
+*.pyo
+
+# Cache de l'éditeur Jupyter Notebook
+.ipynb_checkpoints/
+
+# Dossiers et fichiers de sortie de tests
+__pycache__/
+*.pyc
+*.pyo
+
+# Cache de l'éditeur Visual Studio Code
+.vscode/
+
+# Fichiers de sortie du système de gestion de versions
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
