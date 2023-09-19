@@ -1,4 +1,3 @@
-```markdown
 # Guide d'installation et de configuration du projet
 
 Ce guide vous expliquera comment installer Python, configurer un environnement virtuel et exécuter un projet Python Django à partir d'un référentiel GitHub. Assurez-vous de suivre ces étapes pour mettre en place votre environnement de développement.
