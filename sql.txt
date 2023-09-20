@@ -79,6 +79,7 @@ a ajouter :
 logout 
 
 user => /authenticated/
+get
 
 module => par date / /authenticated/ / => les siens (si add user its intervenant statut)
 get
