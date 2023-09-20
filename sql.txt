@@ -73,13 +73,11 @@ login =>
 refresh token => 
 register => done
 changement mot de passe => pour all
+get user list si admin
+get user detail (sans mdp) si admin
+get user (self)
 
 a ajouter :
-
-logout 
-
-user => /authenticated/
-get
 
 module => par date / /authenticated/ / => les siens (si add user its intervenant statut)
 get
