@@ -24,4 +24,13 @@ class CustomUserAdmin(admin.ModelAdmin):
         }),
     )
 
+    def save_model(self, request, obj, form, change):
+        if 'password' in form.cleaned_data:
+            obj.set_password(form.cleaned_data['password'])
+        elif change:
+            existing_user = self.model.objects.get(pk=obj.pk)
+            obj.set_password(existing_user.password)
+        super().save_model(request, obj, form, change)
+
+
 admin.site.register(CustomUser, CustomUserAdmin)
