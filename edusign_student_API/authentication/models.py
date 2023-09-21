@@ -24,12 +24,20 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, first_name, last_name, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    status = models.CharField(max_length=15, choices=[(status.value, status.value) for status in UserStatus], default=UserStatus.STUDENT.value)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    email = models.EmailField(unique=True, verbose_name='email_address')
+    first_name = models.CharField(max_length=100, verbose_name='first_name')
+    last_name = models.CharField(max_length=100, verbose_name='last_name')
+    status = models.CharField(max_length=15, choices=[(status.value, status.value) for status in UserStatus], default=UserStatus.STUDENT.value, verbose_name='user_status')
+    promotion = models.ForeignKey(
+        'Promotion', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        verbose_name='related_promotion',
+        related_name='users_s_promotion'
+    )
+    is_active = models.BooleanField(default=True, verbose_name='is_user_active')
+    is_staff = models.BooleanField(default=False, verbose_name='is_user_staff')
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
@@ -38,3 +46,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class Promotion(models.Model):
+    name = models.CharField(max_length=128, verbose_name='promotion_name')
+
+    def __str__(self):
+        return self.name

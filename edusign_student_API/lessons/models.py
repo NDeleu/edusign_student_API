@@ -1,25 +1,39 @@
 from django.db import models
-from django.contrib.auth import get_user_model
-from django.conf import settings
+
+from authentication.models import CustomUser, Promotion, UserStatus
 
 class ClassRoom(models.Model):
+    name = models.CharField(max_length=128, verbose_name='classroom_name')
 
-    name = models.CharField(max_length=128, verbose_name='classroomname')
-
-class Promo(models.Model):
-
-    name = models.CharField(max_length=128, verbose_name='promoname')
-    # One to many (user many => promo one)
+    def __str__(self):
+        return self.name
 
 class Lesson(models.Model):
+    name = models.CharField(max_length=200, null=False, verbose_name='lesson_name')
+    date_debut = models.DateField(null=False, verbose_name='start_date')
+    date_fin = models.DateField(null=False, verbose_name='end_date')
+    description = models.CharField(max_length=500, default="Without descriptions", verbose_name='description')
+    intervening = models.OneToOneField(
+        CustomUser, 
+        on_delete=models.CASCADE, 
+        verbose_name='related_intervening',
+        related_name='lesson_s_intervening'
+    )
+    classroom = models.OneToOneField(
+        ClassRoom, 
+        on_delete=models.CASCADE, 
+        verbose_name='related_classroom',
+        related_name='lesson_s_classroom'
+    )
+    promotion = models.OneToOneField(
+        Promotion, 
+        on_delete=models.CASCADE, 
+        verbose_name='related_promotion',
+        related_name='lesson_s_promotion'
+    )
 
-    name = models.CharField(max_length=128, verbose_name='lessonname')
-    # date time start
-    # date time end
-    # descriptions
-    # foreign key Classroom one to one et empêcher plusieurs ClassRoom suivant horaires
-    # foreign key User mais status intervenant uniquement
-    # foreign key ? ref promo : necessaire pour find all User relatifs
+    def __str__(self):
+        return self.name
 
 class Justificatif(models.Model):
     # gestion images / pdf

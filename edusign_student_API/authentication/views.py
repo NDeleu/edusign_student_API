@@ -5,12 +5,17 @@ from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_RE
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
-from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView
 
-from .permissions import IsAdministrator
-from .serializers import UserRegisterSerializer, MyTokenObtainPairSerializer, UserListSerializer, UserDetailSerializer, UserDetailForUserSerializer
+from .permissions import IsAdministrator, IsAdministratorOrIntervening
+from .serializers import (UserRegisterSerializer, UserListSerializer, UserDetailSerializer, 
+                          UserDetailForUserSerializer, UserUpdateSerializer, PromotionCreateSerializer, 
+                          PromotionListSerializer, PromotionDetailSerializer, PromotionUpdateSerializer, 
+                          MyTokenObtainPairSerializer, Promotion) 
 
 User = get_user_model()
+
+# CRUD User :
 
 class RegisterView(CreateAPIView):
     serializer_class = UserRegisterSerializer
@@ -28,26 +33,28 @@ class RegisterView(CreateAPIView):
 class UserListView(ListAPIView):
     serializer_class = UserListSerializer
     queryset = User.objects.all()
-    permission_classes = (IsAuthenticated, IsAdministrator,)
+    permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
 
 class UserDetailView(RetrieveAPIView):
     serializer_class = UserDetailSerializer
     queryset = User.objects.all()
-    permission_classes = (IsAuthenticated, IsAdministrator,)
+    permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
     lookup_field = 'id'
 
-class UserDetailForUserView(RetrieveUpdateAPIView):
+class UserDetailForUserView(RetrieveAPIView):
     serializer_class = UserDetailForUserSerializer
     permission_classes = (IsAuthenticated, )
     queryset = User.objects.all()
     lookup_field = 'id'
 
     def get_object(self):
-        # Assurez-vous que l'utilisateur ne puisse accéder qu'à ses propres détails
         return self.request.user
 
-class EmailTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+class UserUpdateView(RetrieveUpdateAPIView):
+    serializer_class = UserUpdateSerializer
+    permission_classes = (IsAuthenticated, IsAdministrator,)
+    queryset = User.objects.all()
+    lookup_field = 'id'
 
 class ChangePasswordView(APIView):
     permission_classes = (IsAuthenticated,)
@@ -63,3 +70,43 @@ class ChangePasswordView(APIView):
         user.set_password(new_password)
         user.save()
         return Response({"message": "Password successfully updated!"}, status=HTTP_200_OK)
+
+class UserDeleteView(DestroyAPIView):
+    queryset = User.objects.all()
+    permission_classes = (IsAuthenticated, IsAdministrator,)
+    lookup_field = 'id'
+
+# CRUD Promotion :
+
+class PromotionCreateView(CreateAPIView):
+    serializer_class = PromotionCreateSerializer
+    permission_classes = (IsAuthenticated, IsAdministrator,)
+
+class PromotionListView(ListAPIView):
+    serializer_class = PromotionListSerializer
+    queryset = Promotion.objects.all()
+    permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
+
+class PromotionDetailView(RetrieveAPIView):
+    serializer_class = PromotionDetailSerializer
+    queryset = Promotion.objects.all()
+    permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
+    lookup_field = 'id'
+
+class PromotionUpdateView(RetrieveUpdateAPIView):
+    serializer_class = PromotionUpdateSerializer
+    queryset = Promotion.objects.all()
+    permission_classes = (IsAuthenticated, IsAdministrator,)
+    lookup_field = 'id'
+    
+class PromotionDeleteView(DestroyAPIView):
+    queryset = Promotion.objects.all()
+    permission_classes = (IsAuthenticated, IsAdministrator,)
+    lookup_field = 'id'
+
+# Token :
+
+class EmailTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
