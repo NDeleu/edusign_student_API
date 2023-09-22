@@ -1,0 +1,53 @@
+La création et la validation de QR codes pour la présence sont une excellente idée pour assurer l'authenticité et faciliter la prise de présence. Voici comment vous pouvez mettre en œuvre cette fonctionnalité dans votre projet DRF avec une intégration React et React Native:
+
+### Backend:
+
+1. **Générer le QR code**:
+   - Utilisez la bibliothèque `qrcode` pour Python pour générer des images QR.
+   - Intégrez cela dans une vue DRF qui génère un QR code pour un `Lesson` donné, basé sur l'`intervening` actuel et le temps actuel (vous pouvez utiliser des "time slots" de 10 secondes pour générer des QR codes uniques).
+   - Le contenu du QR pourrait être une combinaison de l'ID du `Lesson`, l'ID du `intervening`, et le "time slot" actuel. Pour sécuriser davantage le contenu, vous pouvez le hacher avec un secret.
+
+2. **Valider le QR code scanné**:
+   - Créez une autre vue qui reçoit le code scanné par l'étudiant.
+   - Cette vue décode le QR, valide sa correspondance avec le QR généré pour le `Lesson` actuel (basé sur le temps actuel) et marque l'étudiant comme présent s'il est valide.
+
+### Frontend (React & React Native):
+
+1. **Afficher le QR code pour l'intervenant**:
+   - Utilisez un composant React pour appeler l'API DRF pour générer le QR code pour le `Lesson` actuel.
+   - Affichez l'image du QR code à l'intervenant.
+
+2. **Scanner le QR code avec React Native**:
+   - Utilisez une bibliothèque comme `react-native-camera` pour permettre aux étudiants de scanner le QR code.
+   - Une fois le QR code scanné, envoyez le contenu scanné à votre API DRF pour validation.
+
+3. **Feedback sur le scan**:
+   - Si le scan est réussi (c'est-à-dire que le QR est validé par l'API), affichez un message de succès à l'étudiant.
+   - Sinon, informez l'étudiant que le scan a échoué.
+
+### Considérations supplémentaires:
+
+- **Sécurité**: Bien que le QR code change toutes les 10 secondes, ce qui rend plus difficile pour quelqu'un d'utiliser un vieux QR code, il est toujours possible pour un étudiant de simplement prendre une photo du QR code et de le partager. Si cela est une préoccupation, vous pourriez envisager des mesures de sécurité supplémentaires, comme des QR codes basés sur la géolocalisation.
+  
+- **Performance**: Pour éviter une surcharge de votre serveur, assurez-vous que le frontend ne génère pas de nouvelles requêtes toutes les 10 secondes pour chaque utilisateur. Au lieu de cela, le frontend pourrait générer le QR code sur la base d'une clé secrète partagée (ce qui soulève d'autres préoccupations en matière de sécurité).
+
+C'est une vue d'ensemble assez simplifiée et il y a beaucoup de détails et de nuances que vous devrez gérer en fonction de vos besoins spécifiques, mais cela devrait vous donner une idée générale de la direction à prendre.
+
+_________________________________________________________________________________________________________________________________________
+
+Frontend:
+L'intégration côté frontend impliquerait d'avoir des fonctionnalités pour:
+
+Afficher le QR code pour les intervenants pendant la durée du cours.
+Scanner le QR code pour les étudiants et envoyer le contenu scanné à l'API pour validation.
+L'utilisation de bibliothèques comme react-qrcode pour afficher les QR codes et react-native-camera pour scanner les QR codes serait essentielle.
+
+Je vous suggère de commencer par intégrer ces changements au backend, de tester la génération et la validation des codes QR, puis de travailler sur l'intégration frontale.
+
+__________________________________________________________________________________________________________________________________________
+
+Pour token => toujours en en tête dans Axios
+Si plus bon => requêtes call refresh
+préparation de requêtes Axios
+
+_______________________________________________________________________________________________________________________________________
