@@ -1,6 +1,6 @@
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, RetrieveUpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticated
-from datetime import datetime
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework import filters
@@ -115,7 +115,7 @@ class PresenceCountForSelf(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         user = request.user
-        date_now = datetime.now()
+        date_now = timezone.now()
 
         presence_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now).count()
 
@@ -126,7 +126,7 @@ class AbsenceCountForSelf(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         user = request.user
-        date_now = datetime.now()
+        date_now = timezone.now()
 
         absence_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now, is_present=False).count()
 
@@ -137,7 +137,7 @@ class AbsenceRateForSelf(RetrieveAPIView):
     
     def retrieve(self, request, *args, **kwargs):
         user = request.user
-        date_now = datetime.now()
+        date_now = timezone.now()
 
         total_lessons_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now).count()
         absences_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now, is_present=False).count()
@@ -154,7 +154,7 @@ class PresenceCountForUser(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
-        date_now = datetime.now()
+        date_now = timezone.now()
 
         user = CustomUser.objects.filter(id=user_id, status=UserStatus.STUDENT.value).first()
         if not user:
@@ -169,7 +169,7 @@ class AbsenceCountForUser(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
-        date_now = datetime.now()
+        date_now = timezone.now()
 
         user = CustomUser.objects.filter(id=user_id, status=UserStatus.STUDENT.value).first()
         if not user:
@@ -184,7 +184,7 @@ class AbsenceRateForUser(RetrieveAPIView):
     
     def retrieve(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
-        date_now = datetime.now()
+        date_now = timezone.now()
 
         user = CustomUser.objects.filter(id=user_id, status=UserStatus.STUDENT.value).first()
         if not user:

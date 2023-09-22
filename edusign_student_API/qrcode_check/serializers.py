@@ -1,6 +1,7 @@
 import qrcode
 import hashlib
-from datetime import datetime, timedelta
+from django.utils import timezone
+from datetime import timedelta
 from io import BytesIO
 from django.core.files import File
 
@@ -15,15 +16,20 @@ class QRCodeGeneratorUpdateSerializer(serializers.ModelSerializer):
         fields = ['qr_code', 'expiration_time']
 
     def update(self, instance, validated_data):
-        now = datetime.now()
+        now = timezone.now()
         time_slot = now.timestamp() // 10
+        print("a")
         lesson = instance.lesson
         hashed_data = hashlib.sha256(f"{lesson.id}{lesson.intervening.id}{time_slot}{instance.secret_key}".encode()).hexdigest()
         
         qr_image = qrcode.make(hashed_data)
+        print("01")
         qr_image_io = BytesIO()
+        print("02")
         qr_image.save(qr_image_io, format='PNG')
+        print("03")
         filename = f"qr_{lesson.id}.png"
+        print("04")
         
         instance.qr_code.save(filename, File(qr_image_io), save=False)
         instance.expiration_time = now + timedelta(seconds=10)
@@ -42,7 +48,7 @@ class QRCodeValidationSerializer(serializers.Serializer):
     def validate(self, data):
         student = data.get('student')
         scanned_qr = data.get('scanned_qr')
-        now = datetime.now()
+        now = timezone.now()
 
         lesson = Lesson.objects.filter(promotion=student.promotion, date_debut__lte=now, date_fin__gte=now).first()
 

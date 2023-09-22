@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from datetime import timedelta
 
 from .models import Justification, CustomUser, UserStatus, Presence
 
@@ -14,6 +15,14 @@ class JustificationCreateSerializer(serializers.ModelSerializer):
         if not user.status == UserStatus.STUDENT.value:
             raise serializers.ValidationError("Only students can create a justification.")
         return data
+    
+    def validate_date_debut(self, value):
+            value -= timedelta(hours=2)
+            return value 
+    
+    def validate_date_fin(self, value):
+        value -= timedelta(hours=2)
+        return value
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -52,6 +61,14 @@ class JustificationUpdateForStudentSerializer(serializers.ModelSerializer):
         if self.instance.is_validate is not None:
             raise serializers.ValidationError("Justification has already been reviewed.")
         return data
+    
+    def validate_date_debut(self, value):
+            value -= timedelta(hours=2)
+            return value 
+    
+    def validate_date_fin(self, value):
+        value -= timedelta(hours=2)
+        return value
     
     def update(self, instance, validated_data):
         # handle the usual fields

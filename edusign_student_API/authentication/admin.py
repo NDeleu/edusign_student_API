@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import CustomUser, Promotion
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('id', 'email', 'first_name', 'last_name', 'status', 'promotion', 'is_active', 'is_staff', 'is_superuser')
@@ -32,4 +32,11 @@ class CustomUserAdmin(admin.ModelAdmin):
             obj.set_password(existing_user.password)
         super().save_model(request, obj, form, change)
 
+class PromotionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+    search_fields = ('name',)
+    ordering = ('name',)
+    list_per_page = 25
+
 admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(Promotion, PromotionAdmin)

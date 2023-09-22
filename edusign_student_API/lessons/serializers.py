@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from datetime import timedelta
 
 from .models import CustomUser, Lesson, UserStatus, ClassRoom, Presence
 from authentication.serializers import PromotionDetailSerializer, UserDetailSerializer
@@ -14,6 +15,14 @@ class LessonCreateSerializer(serializers.ModelSerializer):
     def validate_intervening(self, value):
         if value.status != UserStatus.INTERVENING.value:
             raise serializers.ValidationError("L'utilisateur sélectionné n'est pas un intervenant.")
+        return value
+
+    def validate_date_debut(self, value):
+            value -= timedelta(hours=2)
+            return value 
+    
+    def validate_date_fin(self, value):
+        value -= timedelta(hours=2)
         return value
 
     def validate(self, data):
@@ -73,6 +82,14 @@ class LessonUpdateSerializer(serializers.ModelSerializer):
     def validate_intervening(self, value):
         if value.status != UserStatus.INTERVENING.value:
             raise serializers.ValidationError("L'utilisateur sélectionné n'est pas un intervenant.")
+        return value
+    
+    def validate_date_debut(self, value):
+            value -= timedelta(hours=2)
+            return value 
+    
+    def validate_date_fin(self, value):
+        value -= timedelta(hours=2)
         return value
 
     def validate(self, data):

@@ -124,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
@@ -167,7 +167,7 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=10),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=120),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 

@@ -10,8 +10,8 @@ class ClassRoom(models.Model):
 
 class Lesson(models.Model):
     name = models.CharField(max_length=200, null=False, verbose_name='lesson_name')
-    date_debut = models.DateField(null=False, verbose_name='start_date')
-    date_fin = models.DateField(null=False, verbose_name='end_date')
+    date_debut = models.DateTimeField(null=False, verbose_name='start_date')
+    date_fin = models.DateTimeField(null=False, verbose_name='end_date')
     description = models.CharField(max_length=500, default="Without descriptions", verbose_name='description')
     intervening = models.ForeignKey(
         CustomUser, 

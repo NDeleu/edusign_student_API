@@ -1,8 +1,9 @@
-from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.status import HTTP_200_OK
+from django.utils import timezone
+
 
 from .serializers import QRCodeGeneratorUpdateSerializer, QRCodeGeneratorDetailSerializer, Lesson, QRCodeGenerator, QRCodeValidationSerializer
 from authentication.permissions import IsIntervening, IsStudent
@@ -13,7 +14,7 @@ class QRCodeGeneratorView(APIView):
     permission_classes = (IsAuthenticated, IsIntervening,)
 
     def get(self, request):
-        now = datetime.now()
+        now = timezone.now()
 
         lesson = Lesson.objects.filter(intervening=request.user, date_debut__lte=now, date_fin__gte=now).first()
         if not lesson:
