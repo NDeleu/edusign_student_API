@@ -21,3 +21,12 @@ class IsAdministratorOrIntervening(BasePermission):
     """
     def has_permission(self, request, view):
         return bool(request.user and (request.user.status == UserStatus.ADMINISTRATOR.value or request.user.status == UserStatus.INTERVENING.value))
+    
+class IsSelforAdministratorOrIntervening(BasePermission):
+    """
+    Allow access only to users with the status of administrator, intervening, or themselves.
+    """
+    def has_permission(self, request, view):
+        is_self = str(request.user.id) == view.kwargs.get('user_id', "")
+        return bool(request.user and (request.user.status in [UserStatus.ADMINISTRATOR.value, UserStatus.INTERVENING.value] or is_self))
+

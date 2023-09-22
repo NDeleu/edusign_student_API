@@ -13,36 +13,47 @@ class Lesson(models.Model):
     date_debut = models.DateField(null=False, verbose_name='start_date')
     date_fin = models.DateField(null=False, verbose_name='end_date')
     description = models.CharField(max_length=500, default="Without descriptions", verbose_name='description')
-    intervening = models.OneToOneField(
+    intervening = models.ForeignKey(
         CustomUser, 
         on_delete=models.CASCADE, 
-        verbose_name='related_intervening',
+        verbose_name='related_lesson_intervening',
         related_name='lesson_s_intervening'
     )
-    classroom = models.OneToOneField(
+    classroom = models.ForeignKey(
         ClassRoom, 
         on_delete=models.CASCADE, 
-        verbose_name='related_classroom',
+        verbose_name='related_lesson_classroom',
         related_name='lesson_s_classroom'
     )
-    promotion = models.OneToOneField(
+    promotion = models.ForeignKey(
         Promotion, 
         on_delete=models.CASCADE, 
-        verbose_name='related_promotion',
+        verbose_name='related_lesson_promotion',
         related_name='lesson_s_promotion'
     )
 
     def __str__(self):
         return self.name
 
-class Justificatif(models.Model):
+class Presence(models.Model):
+    is_present = models.BooleanField(default=False, verbose_name='is_present_bool')
+    student = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        verbose_name='related_student',
+        related_name='presence_s_student'
+    )
+    lesson = models.ForeignKey(
+        Lesson,
+        on_delete=models.CASCADE,
+        verbose_name='related_lesson',
+        related_name='presence_s_lesson'
+    )
+    
+    class Meta:
+        unique_together = ('student', 'lesson')
+        
+class Justification(models.Model):
     # gestion images / pdf
     # relation absence ?
     pass
-
-class Absence(models.Model):
-    # foreign user
-    # foreign lessons
-    # foreign justif ?
-    pass
-
