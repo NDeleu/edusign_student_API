@@ -174,3 +174,5 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'authentication.CustomUser'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',]
+
+# APPEND_SLASH=False
