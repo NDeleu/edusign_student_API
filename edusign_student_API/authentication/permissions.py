@@ -14,6 +14,13 @@ class IsIntervening(BasePermission):
     """
     def has_permission(self, request, view):
         return bool(request.user and request.user.status == UserStatus.INTERVENING.value)
+    
+class IsStudent(BasePermission):
+    """
+    Allow access only to users with the status of student.
+    """
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.status == UserStatus.STUDENT.value)
 
 class IsAdministratorOrIntervening(BasePermission):
     """
@@ -21,6 +28,14 @@ class IsAdministratorOrIntervening(BasePermission):
     """
     def has_permission(self, request, view):
         return bool(request.user and (request.user.status == UserStatus.ADMINISTRATOR.value or request.user.status == UserStatus.INTERVENING.value))
+    
+class IsSelforAdministrator(BasePermission):
+    """
+    Allow access only to users with the status of administrator, or themselves.
+    """
+    def has_permission(self, request, view):
+        is_self = str(request.user.id) == view.kwargs.get('user_id', "")
+        return bool(request.user and (request.user.status == UserStatus.ADMINISTRATOR.value or is_self))
     
 class IsSelforAdministratorOrIntervening(BasePermission):
     """

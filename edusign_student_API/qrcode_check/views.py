@@ -2,9 +2,12 @@ from datetime import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.status import HTTP_200_OK
 
-from .serializers import QRCodeGeneratorUpdateSerializer, QRCodeGeneratorDetailSerializer, Lesson, QRCodeGenerator
-from authentication.permissions import IsIntervening
+from .serializers import QRCodeGeneratorUpdateSerializer, QRCodeGeneratorDetailSerializer, Lesson, QRCodeGenerator, QRCodeValidationSerializer
+from authentication.permissions import IsIntervening, IsStudent
+
+# QRCode :
 
 class QRCodeGeneratorView(APIView):
     permission_classes = (IsAuthenticated, IsIntervening,)
@@ -25,3 +28,13 @@ class QRCodeGeneratorView(APIView):
 
         detail_serializer = QRCodeGeneratorDetailSerializer(qr_code_generator)
         return Response(detail_serializer.data)
+
+class ValidateQRCode(APIView):
+    permission_classes = [IsAuthenticated, IsStudent]
+
+    def post(self, request):
+        serializer = QRCodeValidationSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response({"success": "Presence marked successfully."}, status=HTTP_200_OK)
+

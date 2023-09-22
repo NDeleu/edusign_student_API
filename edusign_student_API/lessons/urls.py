@@ -25,6 +25,11 @@ urlpatterns = [
     path('presence/list-by-lesson/<int:lesson_id>/', views.PresenceListOfLessonView.as_view(), name='presence_list_by_lesson'),
     path('presence/detail/<int:id>/', views.PresenceDetailView.as_view(), name='presence_detail'),
     path('presence/update/<int:id>/', views.PresenceUpdateView.as_view(), name='presence_update'),
+    
+    # Count Presence and Absence :
+    path('presence/my-lessons-count/', views.PresenceCountForSelf.as_view(), name='presence_my_lessons_count'),
+    path('presence/my-absences-count/', views.AbsenceCountForSelf.as_view(), name='presence_my_absences_count'),
+    path('presence/my-absence-rate/', views.AbsenceRateForSelf.as_view(), name='presence_my_absence_rate'),
     path('presence/user-lessons-count/<int:user_id>/', views.PresenceCountForUser.as_view(), name='presence_user_lessons_count'),
     path('presence/user-absences-count/<int:user_id>/', views.AbsenceCountForUser.as_view(), name='presence_user_absences_count'),
     path('presence/user-absence-rate/<int:user_id>/', views.AbsenceRateForUser.as_view(), name='presence_user_absence_rate'),

@@ -3,13 +3,14 @@ from rest_framework.permissions import IsAuthenticated
 from datetime import datetime
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from rest_framework import filters
 
 from lessons.serializers import (LessonCreateSerializer, LessonListSerializer, LessonDetailSerializer, 
                                  LessonUpdateSerializer, ClassRoomCreateSerializer, ClassRoomListSerializer, 
                                  ClassRoomUpdateSerializer, LessonListForUserSerializer, LessonDetailForUserSerializer,
                                  PresenceCreateSerializer, PresenceListSerializer, PresenceDetailSerializer, PresenceUpdateSerializer,
                                  Lesson, ClassRoom, Presence, CustomUser, UserStatus)
-from authentication.permissions import IsAdministrator, IsAdministratorOrIntervening, IsSelforAdministratorOrIntervening
+from authentication.permissions import IsAdministrator, IsAdministratorOrIntervening, IsSelforAdministratorOrIntervening, IsStudent
 
 # CRUD Lesson:
 
@@ -21,10 +22,14 @@ class LessonListView(ListAPIView):
     serializer_class = LessonListSerializer
     queryset = Lesson.objects.all()
     permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['date_debut', 'date_fin']
 
 class LessonListForUserView(ListAPIView):
     serializer_class = LessonListForUserSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['date_debut', 'date_fin']
 
     def get_queryset(self):
         user = self.request.user
@@ -102,9 +107,50 @@ class PresenceUpdateView(RetrieveUpdateAPIView):
     queryset = Presence.objects.all()
     permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
     lookup_field = 'id'
+
+# Count Presence and Absence :
+
+class PresenceCountForSelf(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, IsStudent,)
+
+    def retrieve(self, request, *args, **kwargs):
+        user = request.user
+        date_now = datetime.now()
+
+        presence_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now).count()
+
+        return Response({'student_lessons_count': presence_count})
+
+class AbsenceCountForSelf(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, IsStudent,)
+
+    def retrieve(self, request, *args, **kwargs):
+        user = request.user
+        date_now = datetime.now()
+
+        absence_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now, is_present=False).count()
+
+        return Response({'student_absences_count': absence_count})
+
+class AbsenceRateForSelf(RetrieveAPIView):
+    permission_classes = (IsAuthenticated, IsStudent,)
     
+    def retrieve(self, request, *args, **kwargs):
+        user = request.user
+        date_now = datetime.now()
+
+        total_lessons_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now).count()
+        absences_count = Presence.objects.filter(student=user, lesson__date_debut__lte=date_now, is_present=False).count()
+
+        if total_lessons_count == 0:
+            absence_rate = 0
+        else:
+            absence_rate = (absences_count * 100) / total_lessons_count
+
+        return Response({'absence_rate': absence_rate})
+
 class PresenceCountForUser(RetrieveAPIView):
-    permission_classes = (IsAuthenticated, IsSelforAdministratorOrIntervening,)
+    permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
 
     def retrieve(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
@@ -119,7 +165,7 @@ class PresenceCountForUser(RetrieveAPIView):
         return Response({'student_lessons_count': presence_count})
     
 class AbsenceCountForUser(RetrieveAPIView):
-    permission_classes = (IsAuthenticated, IsSelforAdministratorOrIntervening,)
+    permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
 
     def retrieve(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']
@@ -134,7 +180,7 @@ class AbsenceCountForUser(RetrieveAPIView):
         return Response({'student_absences_count': absence_count})
     
 class AbsenceRateForUser(RetrieveAPIView):
-    permission_classes = (IsAuthenticated, IsSelforAdministratorOrIntervening,)
+    permission_classes = (IsAuthenticated, IsAdministratorOrIntervening,)
     
     def retrieve(self, request, *args, **kwargs):
         user_id = self.kwargs['user_id']

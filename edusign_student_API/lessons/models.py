@@ -53,7 +53,3 @@ class Presence(models.Model):
     class Meta:
         unique_together = ('student', 'lesson')
         
-class Justification(models.Model):
-    # gestion images / pdf
-    # relation absence ?
-    pass

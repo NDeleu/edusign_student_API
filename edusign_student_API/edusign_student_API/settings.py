@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'authentication',
     'lessons',
     'qrcode_check',
+    'justication_absence',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +86,7 @@ WSGI_APPLICATION = 'edusign_student_API.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',),
+    'DEFAULT_METADATA_CLASS': 'myproject.metadata.OrderingMetadata',
 }
 
 # Database
@@ -165,7 +167,7 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=120),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=10),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
