@@ -10,8 +10,8 @@ urlpatterns = [
     
     # Include :
     path('api/auth/', include('authentication.urls')),
-    path('api/lesson/', include('lesson.urls')),
-    path('api/qr-code/', include('qr-code.urls')),
+    path('api/lesson/', include('lessons.urls')),
+    path('api/qr-code/', include('qrcode_check.urls')),
     path('api/justification/', include('justication_absence.urls')),
 ]
 

@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'edusign_student_API.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',),
-    'DEFAULT_METADATA_CLASS': 'myproject.metadata.OrderingMetadata',
+    'DEFAULT_METADATA_CLASS': 'edusign_student_API.metadata.OrderingMetadata',
 }
 
 # Database

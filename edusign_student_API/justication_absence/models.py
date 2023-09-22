@@ -17,7 +17,7 @@ class Justification(models.Model):
     date_debut = models.DateField(null=False, verbose_name='start_absence_justified_date')
     date_fin = models.DateField(null=False, verbose_name='end_absence_justified_date')
     proof_document = models.FileField(upload_to="proof_documents/", verbose_name="proof_of_absence", validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
-    is_validate = models.NullBooleanField(default=None, verbose_name="is_justification_validated")
+    is_validate = models.BooleanField(null=True, blank=True, default=None, verbose_name="is_justification_validated")
 
     def __str__(self):
         if self.is_validate:
